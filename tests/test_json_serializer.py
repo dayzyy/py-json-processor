@@ -2,6 +2,7 @@ from typing import List, Optional
 import pytest
 from serializers.base_serializers import Serializer, SerializerMeta, JSONSerializer
 import json
+from contextlib import nullcontext as does_not_raise
 
 @pytest.mark.parametrize(
     'model,fields,exclude,json_data',
@@ -49,3 +50,30 @@ def test_base_serializer_validates_meta_presence_on_class_creation():
     with pytest.raises(ValueError, match="Serializer class must define a Meta class with a 'model' attribute"):
         class CustomSerializer(Serializer):
             pass
+
+@pytest.mark.parametrize(
+    'model,fields,expectation',
+    [
+        (
+            type('Person', (), {"name": str, "age": int}),
+            ['name', 'age'],
+            does_not_raise()
+        ),
+        (
+            type('Student', (), {"id": int, "name": str, "room": int}),
+            ['id', 'name', 'room', 'age'],
+            pytest.raises(ValueError, match="Attribute 'age' does not exist on class 'Student'")
+        ),
+        (
+            type('Room', (), {"id": int, "name": str}),
+            ['id', 'room_name'],
+            pytest.raises(ValueError, match="Attribute 'room_name' does not exist on class 'Room'")
+        ),
+    ]
+)
+def test_base_serializer_validates_meta_fields_on_class_creation(model, fields: List[str], expectation):
+    with expectation:
+        class CustomSerializer(Serializer):
+            class Meta(SerializerMeta):
+                model = model
+                fields = fields
