@@ -46,10 +46,20 @@ def test_json_serializer_serialize_and_deserialize_methods(model, fields: Option
 
     assert json.loads(serialized) == json.loads(json_data)
 
-def test_base_serializer_validates_meta_presence_on_class_creation():
+@pytest.mark.parametrize(
+    "method_name, args",
+    [
+        ("serialize", [object()]),
+        ("deserialize", '{"key":"value"}'),
+    ],
+)
+def test_meta_validation_raises_when_missing(method_name, args):
     with pytest.raises(ValueError, match="Serializer class must define a Meta class with a 'model' attribute"):
-        class CustomSerializer(Serializer):
+        class CustomJSONSerializer(JSONSerializer):
             pass
+
+        method = getattr(CustomJSONSerializer, method_name)
+        method(*args)
 
 @pytest.mark.parametrize(
     'model,fields,expectation',
@@ -71,9 +81,12 @@ def test_base_serializer_validates_meta_presence_on_class_creation():
         ),
     ]
 )
-def test_base_serializer_validates_meta_fields_on_class_creation(model, fields: List[str], expectation):
+
+def test_serializer_validates_meta_fields_on_method_call(model, fields, expectation):
+    class CustomSerializer(JSONSerializer):
+        class Meta(SerializerMeta):
+            model = model
+            fields = fields
+
     with expectation:
-        class CustomSerializer(Serializer):
-            class Meta(SerializerMeta):
-                model = model
-                fields = fields
+        CustomSerializer.serialize(model())
