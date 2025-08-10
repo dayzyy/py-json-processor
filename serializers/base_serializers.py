@@ -37,7 +37,7 @@ class Serializer(ABC):
     def _validate_fields(cls, fields, model) -> None:
         for field in fields:
             if field not in model.__annotations__.keys():
-                raise ValueError(f"Attribute {field} does not exist on class {model.__name__!r}")
+                raise ValueError(f"Attribute {field!r} does not exist on class {model.__name__!r}")
 
     @classmethod
     def _validate_meta(cls) -> None:
