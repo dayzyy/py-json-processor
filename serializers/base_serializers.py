@@ -11,6 +11,8 @@ class SerializerMeta(Protocol):
     exclude: Optional[List[str]] = None
 
 class Serializer(ABC):
+    Meta: Type[SerializerMeta]
+
     @staticmethod
     def ensure_meta(method):
         @wraps(method)
