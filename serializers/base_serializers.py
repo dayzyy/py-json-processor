@@ -73,3 +73,10 @@ class JSONSerializer(Serializer):
         data = {key: getattr(instance, key) for key in fields}
 
         return json.dumps(data, indent=indent)
+
+    @classmethod
+    def deserialize(cls, data: str, *args, **kwargs) -> T:
+        model = cls._get_meta().model
+        assert model is not None
+
+        return model(**json.loads(data))
