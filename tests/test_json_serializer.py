@@ -1,6 +1,6 @@
 from typing import List, Optional
 import pytest
-from serializers.base_serializers import SerializerMeta, JSONSerializer
+from serializers.base_serializers import Serializer, SerializerMeta, JSONSerializer
 import json
 
 @pytest.mark.parametrize(
@@ -44,3 +44,8 @@ def test_json_serializer_serialize_and_deserialize_methods(model, fields: Option
     serialized = serializer.serialize(instance)
 
     assert json.loads(serialized) == json.loads(json_data)
+
+def test_base_serializer_validates_meta_presence_on_class_creation():
+    with pytest.raises(ValueError, match="Serializer class must define a Meta class with a 'model' attribute"):
+        class CustomSerializer(Serializer):
+            pass
