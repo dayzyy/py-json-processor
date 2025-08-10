@@ -55,10 +55,12 @@ class Serializer(ABC):
 
     @classmethod
     @abstractmethod
+    @ensure_meta
     def serialize(cls, instance: T) -> str:
         raise NotImplementedError
 
     @classmethod
     @abstractmethod
+    @ensure_meta
     def deserialize(cls, data: str) -> T:
         raise NotImplementedError
