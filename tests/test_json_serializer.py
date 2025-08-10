@@ -25,7 +25,7 @@ from contextlib import nullcontext as does_not_raise
     ]
 )
 def test_json_serializer_serialize_and_deserialize_methods(model, fields: Optional[List[str]], exclude: Optional[List[str]], json_data: str):
-    class CustomSerializer(JSONSerializer):
+    class CustomJSONSerializer(JSONSerializer):
         class Meta(SerializerMeta):
             model = model
             fields = fields
@@ -37,7 +37,7 @@ def test_json_serializer_serialize_and_deserialize_methods(model, fields: Option
     for key, value in data.items():
         setattr(instance, key, value)
 
-    serializer = CustomSerializer
+    serializer = CustomJSONSerializer
     deserialized = serializer.deserialize(json_data)
 
     assert instance.__dict__ == deserialized.__dict__
