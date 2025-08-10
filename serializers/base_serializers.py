@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import List, Optional, TypeVar, Type, Protocol, Any
+from functools import wraps
 
 T = TypeVar('T')
 
@@ -9,10 +10,14 @@ class SerializerMeta(Protocol):
     exclude: Optional[List[str]] = None
 
 class Serializer(ABC):
-    @classmethod
-    def __init_subclass__(cls, *args, **kwargs) -> None:
-        super().__init_subclass__(*args, **kwargs)
-        cls._validate_meta()
+    @staticmethod
+    def ensure_meta(method):
+        @wraps(method)
+        def wrapper(cls, *args, **kwargs):
+            cls._validate_meta()
+
+            return method(cls, *args, **kwargs)
+        return wrapper
 
     @classmethod
     def _get_meta(cls) -> Type[SerializerMeta] | None:
