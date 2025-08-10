@@ -68,8 +68,8 @@ class Serializer(ABC):
 
 class JSONSerializer(Serializer):
     @classmethod
-    def serialize(cls, instance: T) -> str:
+    def serialize(cls, instance: T, *args, indent=2, **kwargs) -> str:
         fields = cls._get_fields()
         data = {key: getattr(instance, key) for key in fields}
 
-        return json.dumps(data)
+        return json.dumps(data, indent=indent)
