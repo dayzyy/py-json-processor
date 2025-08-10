@@ -57,13 +57,13 @@ class Serializer(ABC):
     @classmethod
     @abstractmethod
     @ensure_meta
-    def serialize(cls, instance: T) -> str:
+    def serialize(cls, instance: T, *args, **kwargs) -> str:
         raise NotImplementedError
 
     @classmethod
     @abstractmethod
     @ensure_meta
-    def deserialize(cls, data: str) -> T:
+    def deserialize(cls, data: str, *args, **kwargs) -> T:
         raise NotImplementedError
 
 class JSONSerializer(Serializer):
