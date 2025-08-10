@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import List, Optional, TypeVar, Type, Protocol, Any
 from functools import wraps
+import json
 
 T = TypeVar('T')
 
@@ -64,3 +65,11 @@ class Serializer(ABC):
     @ensure_meta
     def deserialize(cls, data: str) -> T:
         raise NotImplementedError
+
+class JSONSerializer(Serializer):
+    @classmethod
+    def serialize(cls, instance: T) -> str:
+        fields = cls._get_fields()
+        data = {key: getattr(instance, key) for key in fields}
+
+        return json.dumps(data)
