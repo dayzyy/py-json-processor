@@ -25,11 +25,17 @@ from contextlib import nullcontext as does_not_raise
     ]
 )
 def test_json_serializer_serialize_and_deserialize_methods(model, fields: Optional[List[str]], exclude: Optional[List[str]], json_data: str):
+    class Meta(SerializerMeta):
+        pass
+
+    Meta.model = model
+    Meta.fields = fields
+    Meta.exclude = exclude
+
     class CustomJSONSerializer(JSONSerializer):
-        class Meta(SerializerMeta):
-            model = model
-            fields = fields
-            exclude = exclude
+        pass
+
+    CustomJSONSerializer.Meta = Meta
 
     data = json.loads(json_data)
 
@@ -83,10 +89,16 @@ def test_meta_validation_raises_when_missing(method_name, args):
 )
 
 def test_serializer_validates_meta_fields_on_method_call(model, fields, expectation):
+    class Meta(SerializerMeta):
+        pass
+
+    Meta.model = model
+    Meta.fields = fields
+
     class CustomSerializer(JSONSerializer):
-        class Meta(SerializerMeta):
-            model = model
-            fields = fields
+        pass
+
+    CustomSerializer.Meta = Meta
 
     with expectation:
         CustomSerializer.serialize(model())
