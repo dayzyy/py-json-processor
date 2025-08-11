@@ -1,7 +1,7 @@
 import pytest
-from file_handlers.base_file_readers import TextFileReader
 import tempfile
 import os
+from file_handlers.base_file_writers import TextFileWriter
 
 # Create a temporary file and provide path to it
 @pytest.fixture
@@ -20,13 +20,10 @@ def tmp_path():
         'name,age\nLuka,20\n'  # CSV content
     ]
 )
-def test_text_file_reader_reads_content_correctly(tmp_path, content):
-    with open(tmp_path, 'w', encoding='utf-8') as f:
-        f.write(content)
+def test_text_file_writer_writes_content_correctly(tmp_path, content):
+    TextFileWriter.write(tmp_path, content)
 
-    result = TextFileReader.read(tmp_path)
-    assert result == content
+    with open(tmp_path, 'r', encoding='utf-8') as f:
+        read_content = f.read()
 
-def test_text_file_reader_file_not_found():
-    with pytest.raises(FileNotFoundError):
-        TextFileReader.read('non_existent_file.txt')
+    assert read_content == content
