@@ -26,3 +26,7 @@ def test_text_file_reader_reads_content_correctly(tmp_path, content):
 
     result = TextFileReader.read(tmp_path)
     assert result == content
+
+def test_text_file_reader_file_not_found():
+    with pytest.raises(FileNotFoundError):
+        TextFileReader.read('non_existent_file.txt')
