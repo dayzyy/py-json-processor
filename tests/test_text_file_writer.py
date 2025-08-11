@@ -40,3 +40,7 @@ def test_text_file_writer_overwrites_existing_file(tmp_path):
         read_content = f.read()
 
     assert read_content == new_content
+
+def test_text_file_writer_file_not_found():
+    with pytest.raises(FileNotFoundError):
+        TextFileWriter.write('/invalid/path/to/file.txt', 'content')
