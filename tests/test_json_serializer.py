@@ -3,22 +3,23 @@ import pytest
 from serializers.base_serializers import Serializer, SerializerMeta, JSONSerializer
 import json
 from contextlib import nullcontext as does_not_raise
+from models.model import Model
 
 @pytest.mark.parametrize(
     'model,fields,exclude,json_data',
     [
         (
-            type('Person', (), {'name': str, 'age': int}),
+            type('Person', (Model,), {'name': str, 'age': int}),
             None, None,
             '{"name": "Luka", "age": 20}'
         ),
         (
-            type('Student', (), {'id': int, 'name': str, 'room': int}),
+            type('Student', (Model,), {'id': int, 'name': str, 'room': int}),
             None, None,
             '{"id": 0, "name": "Luka", "room": 111}'
         ),
         (
-            type('Room', (), {'id': int, 'name': str}),
+            type('Room', (Model,), {'id': int, 'name': str}),
             None, None,
             '{"id": 19, "name": "Room #19"}'
         )
@@ -71,23 +72,22 @@ def test_meta_validation_raises_when_missing(method_name, args):
     'model,fields,expectation',
     [
         (
-            type('Person', (), {"name": str, "age": int}),
+            type('Person', (Model,), {"name": str, "age": int}),
             ['name', 'age'],
             does_not_raise()
         ),
         (
-            type('Student', (), {"id": int, "name": str, "room": int}),
+            type('Student', (Model,), {"id": int, "name": str, "room": int}),
             ['id', 'name', 'room', 'age'],
             pytest.raises(ValueError, match="Attribute 'age' does not exist on class 'Student'")
         ),
         (
-            type('Room', (), {"id": int, "name": str}),
+            type('Room', (Model,), {"id": int, "name": str}),
             ['id', 'room_name'],
             pytest.raises(ValueError, match="Attribute 'room_name' does not exist on class 'Room'")
         ),
     ]
 )
-
 def test_serializer_validates_meta_fields_on_method_call(model, fields, expectation):
     class Meta(SerializerMeta):
         pass
