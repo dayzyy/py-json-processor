@@ -17,7 +17,8 @@ def tmp_path():
     'content',
     [
         '{"name": "Luka", "age": 20}',  # JSON content
-        '<room><name>Room 101</name><id>1</id></room>'  # XML content
+        '<room><name>Room 101</name><id>1</id></room>',  # XML content
+        'name,age\nLuka,20\n'  # CSV content
     ]
 )
 def test_text_file_reader_reads_content_correctly(tmp_path, content):
