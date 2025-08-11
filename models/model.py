@@ -14,8 +14,8 @@ class Model:
 
             if not isinstance(value, expected_attrs[key]):
                 raise TypeError(
-                    f"Invalid type for attribute {key!r} when instantiating class {cls.__name__!r}:"
-                    f"expected {type(expected_attrs[key])!r}, got {type(value)!r}"
+                    f"Invalid type for attribute {key!r} when instantiating class {cls.__name__!r}: "
+                    f"expected {expected_attrs[key]!r}, got {type(value)!r}"
                 )
 
             setattr(self, key, value)
