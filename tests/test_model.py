@@ -2,6 +2,18 @@ import pytest
 from models.model import Model
 from contextlib import nullcontext as does_not_raise
 
+def test_model_init_sets_instance_attributes_via_class_annotations():
+    class Student(Model):
+        id: int
+        name: str
+        room: int
+
+    student = Student(id=1, name='Luka', room=111)
+
+    assert getattr(student, 'id', None) == 1
+    assert getattr(student, 'name', None) == 'Luka'
+    assert getattr(student, 'room', None) == 111
+
 def test_model_init_raises_for_unexpected_attribute():
     class Student(Model):
         id: int
