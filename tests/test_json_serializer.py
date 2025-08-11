@@ -1,6 +1,6 @@
 from typing import List, Optional
 import pytest
-from serializers.base_serializers import Serializer, SerializerMeta, JSONSerializer
+from serializers.base_serializers import BaseSerializer, SerializerMeta, JSONSerializer
 import json
 from contextlib import nullcontext as does_not_raise
 from models.base_models import Model

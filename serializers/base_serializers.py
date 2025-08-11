@@ -10,7 +10,7 @@ class SerializerMeta(Protocol):
     fields: Optional[List[str]] = None
     exclude: Optional[List[str]] = None
 
-class Serializer(ABC):
+class BaseSerializer(ABC):
     Meta: Type[SerializerMeta]
 
     @staticmethod
@@ -68,9 +68,9 @@ class Serializer(ABC):
     def deserialize(cls, data: str, *args, **kwargs) -> T:
         raise NotImplementedError
 
-class JSONSerializer(Serializer):
+class JSONSerializer(BaseSerializer):
     @classmethod
-    @Serializer.ensure_meta
+    @BaseSerializer.ensure_meta
     def serialize(cls, instance: T, *args, indent=2, **kwargs) -> str:
         fields = cls._get_fields()
         data = {key: getattr(instance, key) for key in fields}
@@ -78,7 +78,7 @@ class JSONSerializer(Serializer):
         return json.dumps(data, indent=indent)
 
     @classmethod
-    @Serializer.ensure_meta
+    @BaseSerializer.ensure_meta
     def deserialize(cls, data: str, *args, **kwargs) -> T:
         model = cls._get_meta().model
         assert model is not None
