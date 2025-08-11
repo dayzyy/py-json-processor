@@ -18,3 +18,12 @@ def test_model_init_raises_for_missing_attribute():
 
     with pytest.raises(ValueError, match="Missing attribute 'name' when instantiating class 'Room'"):
         Room(id=1)
+
+def test_model_init_raises_for_attribute_type_missmatch():
+    class Student(Model):
+        id: int
+        name: str
+        room: int
+
+    with pytest.raises(ValueError, match="Invalid type for attribute 'room' when instantiating class 'Student': expected 'int', got 'str'")
+        Student(id=1, name='Luka', room="bathroom")
