@@ -27,3 +27,16 @@ def test_text_file_writer_writes_content_correctly(tmp_path, content):
         read_content = f.read()
 
     assert read_content == content
+
+def test_text_file_writer_overwrites_existing_file(tmp_path):
+    initial_content = "Old content"
+    with open(tmp_path, 'w', encoding='utf-8') as f:
+        f.write(initial_content)
+
+    new_content = "New content"
+    TextFileWriter.write(tmp_path, new_content)
+
+    with open(tmp_path, 'r', encoding='utf-8') as f:
+        read_content = f.read()
+
+    assert read_content == new_content
