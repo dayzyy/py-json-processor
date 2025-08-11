@@ -37,5 +37,5 @@ def test_model_init_raises_for_attribute_type_missmatch():
         name: str
         room: int
 
-    with pytest.raises(ValueError, match="Invalid type for attribute 'room' when instantiating class 'Student': expected 'int', got 'str'")
+    with pytest.raises(ValueError, match="Invalid type for attribute 'room' when instantiating class 'Student': expected 'int', got 'str'"):
         Student(id=1, name='Luka', room="bathroom")
