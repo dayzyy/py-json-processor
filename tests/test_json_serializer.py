@@ -3,7 +3,7 @@ import pytest
 from serializers.base_serializers import Serializer, SerializerMeta, JSONSerializer
 import json
 from contextlib import nullcontext as does_not_raise
-from models.model import Model
+from models.base_models import Model
 
 @pytest.mark.parametrize(
     'model,fields,exclude,json_data',

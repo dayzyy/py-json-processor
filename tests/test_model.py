@@ -1,5 +1,5 @@
 import pytest
-from models.model import Model
+from models.base_models import Model
 from contextlib import nullcontext as does_not_raise
 
 def test_model_init_sets_instance_attributes_via_class_annotations():
