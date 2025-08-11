@@ -67,26 +67,29 @@ def test_meta_validation_raises_when_missing(method_name, args):
         method(*args)
 
 @pytest.mark.parametrize(
-    'model,fields,expectation',
+    'model,instance_kwargs,fields,expectation',
     [
         (
             type('Person', (Model,), {"__annotations__": {"name": str, "age": int}}),
+            {"name": "Luka", "age": 20},
             ['name', 'age'],
             does_not_raise()
         ),
         (
             type('Student', (Model,), {"__annotations__": {"id": int, "name": str, "room": int}}),
+            {"id": 0, "name": "Luka", "room": 111},
             ['id', 'name', 'room', 'age'],
             pytest.raises(ValueError, match="Attribute 'age' does not exist on class 'Student'")
         ),
         (
             type('Room', (Model,), {"__annotations__": {"id": int, "name": str}}),
+            {"id": 111, "name": "Room #111"},
             ['id', 'room_name'],
             pytest.raises(ValueError, match="Attribute 'room_name' does not exist on class 'Room'")
         ),
     ]
 )
-def test_serializer_validates_meta_fields_on_method_call(model, fields, expectation):
+def test_serializer_validates_meta_fields_on_method_call(model, instance_kwargs, fields, expectation):
     class Meta(SerializerMeta):
         pass
 
@@ -99,4 +102,4 @@ def test_serializer_validates_meta_fields_on_method_call(model, fields, expectat
     CustomSerializer.Meta = Meta
 
     with expectation:
-        CustomSerializer.serialize(model())
+        CustomSerializer.serialize(model(**instance_kwargs))
