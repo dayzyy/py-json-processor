@@ -28,7 +28,7 @@ def test_model_init_raises_for_missing_attribute():
         id: int
         name: str
 
-    with pytest.raises(ValueError, match="Missing attribute 'name' when instantiating class 'Room'"):
+    with pytest.raises(ValueError, match=r"Missing attribute \['name'\] when instantiating class 'Room'"):
         Room(id=1)
 
 def test_model_init_raises_for_attribute_type_missmatch():
