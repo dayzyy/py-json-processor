@@ -68,6 +68,12 @@ class BaseSerializer(ABC):
     def deserialize(cls, data: str, *args, **kwargs) -> T:
         raise NotImplementedError
 
+    @classmethod
+    @abstractmethod
+    @ensure_meta
+    def deserialize_list(cls, data: str, *args, **kwargs) -> list[T]:
+        raise NotImplementedError
+
 class JSONSerializer(BaseSerializer):
     @classmethod
     @BaseSerializer.ensure_meta
