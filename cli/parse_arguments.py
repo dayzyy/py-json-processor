@@ -1,4 +1,7 @@
 import argparse
+from settings import SERIALIZERS
+
+AVAILABE_FORMATS = [format for format in SERIALIZERS.keys()]
 
 def parse_arguments():
     parser = argparse.ArgumentParser(
@@ -21,8 +24,8 @@ def parse_arguments():
         "-of",
         "--output-format",
         required=True,
-        choices=["json", "xml"],
-        help="Output format. Must be either 'json' or 'xml'."
+        choices=AVAILABE_FORMATS,
+        help=f"Output format. Must be one of the listed {AVAILABE_FORMATS}."
     )
     parser.add_argument(
         "-fmt",
