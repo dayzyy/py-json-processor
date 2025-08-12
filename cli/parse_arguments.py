@@ -21,14 +21,14 @@ def parse_arguments():
         help="Path to the rooms JSON file."
     )
     parser.add_argument(
-        "-of",
+        "-fmt",
         "--output-format",
         required=True,
         choices=AVAILABE_FORMATS,
         help=f"Output format. Must be one of the listed {AVAILABE_FORMATS}."
     )
     parser.add_argument(
-        "-fmt",
+        "-of",
         "--output-file",
         required=True,
         help="Path to save the generated output file."
