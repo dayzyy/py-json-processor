@@ -27,7 +27,7 @@ def main():
         else:
             formated_data = xml_data
 
-    TextFileWriter.write(formated_data, args.output_file)
+    TextFileWriter.write(args.output_file, formated_data)
 
 if __name__ == "__main__":
     main()
