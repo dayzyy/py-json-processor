@@ -103,3 +103,41 @@ def test_serializer_validates_meta_fields_on_method_call(model, instance_kwargs,
 
     with expectation:
         CustomSerializer.serialize(model(**instance_kwargs))
+
+@pytest.mark.parametrize(
+    'model, json_list_str, expected_instances',
+    [
+        (
+            type('Person', (Model,), {"__annotations__": {'name': str, 'age': int}}),
+            '[{"name": "Luka", "age": 20}, {"name": "Anna", "age": 25}]',
+            [
+                type('Person', (Model,), {"__annotations__": {'name': str, 'age': int}})(name="Luka", age=20),
+                type('Person', (Model,), {"__annotations__": {'name': str, 'age': int}})(name="Anna", age=25),
+            ]
+        ),
+        (
+            type('Student', (Model,), {"__annotations__": {'id': int, 'name': str, 'room': int}}),
+            '[{"id": 0, "name": "Luka", "room": 111}, {"id": 1, "name": "Anna", "room": 222}]',
+            [
+                type('Student', (Model,), {"__annotations__": {'id': int, 'name': str, 'room': int}})(id=0, name="Luka", room=111),
+                type('Student', (Model,), {"__annotations__": {'id': int, 'name': str, 'room': int}})(id=1, name="Anna", room=222),
+            ]
+        ),
+    ]
+)
+def test_json_serializer_deserialize_lists_method(model, json_list_str, expected_instances):
+    class Meta(SerializerMeta):
+        pass
+
+    Meta.model = model
+
+    class CustomJSONSerializer(JSONSerializer):
+        pass
+
+    CustomJSONSerializer.Meta = Meta
+
+    instances = CustomJSONSerializer.deserialize_list(json_list_str)
+
+    assert len(instances) == len(expected_instances)
+    for actual, expected in zip(instances, expected_instances):
+        assert actual.__dict__ == expected.__dict__
