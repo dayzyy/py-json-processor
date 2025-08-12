@@ -3,8 +3,7 @@ from file_handlers.base_file_readers import TextFileReader
 from file_handlers.base_file_writers import TextFileWriter
 from serializers.custom_serializers import StudentJSONSerializer, RoomJSONSerializer
 from app.combine import combine
-import json
-import dicttoxml
+from settings import SERIALIZERS
 
 def main():
     args = parse_arguments()
@@ -17,15 +16,11 @@ def main():
 
     combined = combine(students, rooms)
 
-    if args.output_format == 'json':
-        formated_data = json.dumps(combined)
-    else:
-        xml_data = dicttoxml.dicttoxml(combined, custom_root='rooms', attr_type=False)
+    # safe to assert: parse_arguments makes sure output_format is supported by SERIALIZERS
+    serializer = SERIALIZERS.get(args.output_format, None)
+    assert serializer is not None
 
-        if isinstance(xml_data, bytes):
-            formated_data = xml_data.decode()
-        else:
-            formated_data = xml_data
+    formated_data = serializer(combined)
 
     TextFileWriter.write(args.output_file, formated_data)
 
