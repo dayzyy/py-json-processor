@@ -84,3 +84,12 @@ class JSONSerializer(BaseSerializer):
         assert model is not None
 
         return model(**json.loads(data))
+
+    @classmethod
+    @BaseSerializer.ensure_meta
+    def deserialize_list(cls, data: str, *args, **kwargs) -> list[T]:
+        model = cls._get_meta().model
+        assert model is not None
+
+        items = json.loads(data)
+        return [model(**item) for item in items]
