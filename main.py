@@ -9,7 +9,7 @@ import dicttoxml
 def main():
     args = parse_arguments()
 
-    students_data = TextFileReader.read(args.student_file)
+    students_data = TextFileReader.read(args.students_file)
     rooms_data = TextFileReader.read(args.rooms_file)
 
     students = StudentJSONSerializer.deserialize_list(students_data)
