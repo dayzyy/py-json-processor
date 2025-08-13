@@ -5,22 +5,31 @@ from serializers.custom_serializers import StudentJSONSerializer, RoomJSONSerial
 from app.combine import combine
 from exporters.factory import ExporterFactory
 
-def main():
-    args = parse_arguments()
 
-    students_data = TextFileReader.read(args.students_file)
-    rooms_data = TextFileReader.read(args.rooms_file)
+# Core business logic
+def run(students_file: str, rooms_file: str, output_format: str, output_file: str):
+    students_data = TextFileReader.read(students_file)
+    rooms_data = TextFileReader.read(rooms_file)
 
     students = StudentJSONSerializer.deserialize_list(students_data)
     rooms = RoomJSONSerializer.deserialize_list(rooms_data)
 
     combined = combine(students, rooms)
 
-    exporter = ExporterFactory.get_exporter(args.output_format)
+    exporter = ExporterFactory.get_exporter(output_format)
+    formatted_data = exporter(combined)
 
-    formated_data = exporter(combined)
+    TextFileWriter.write(output_file, formatted_data)
 
-    TextFileWriter.write(args.output_file, formated_data)
+
+def main():
+    args = parse_arguments()
+    run(
+        students_file=args.students_file,
+        rooms_file=args.rooms_file,
+        output_format=args.output_format,
+        output_file=args.output_file
+    )
 
 if __name__ == "__main__":
     main()
