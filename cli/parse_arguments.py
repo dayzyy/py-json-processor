@@ -1,7 +1,7 @@
 import argparse
 from exporters.formats import ExporterFormats
 
-AVAILABE_FORMATS = [format for format in ExporterFormats]
+AVAILABE_FORMATS = [format.value for format in ExporterFormats]
 
 def parse_arguments():
     parser = argparse.ArgumentParser(
