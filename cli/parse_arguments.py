@@ -1,7 +1,7 @@
 import argparse
-from settings import SERIALIZERS
+from exporters.formats import ExporterFormats
 
-AVAILABE_FORMATS = [format for format in SERIALIZERS.keys()]
+AVAILABE_FORMATS = [format for format in ExporterFormats]
 
 def parse_arguments():
     parser = argparse.ArgumentParser(
